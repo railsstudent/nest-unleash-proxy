@@ -18,7 +18,7 @@ async function bootstrap() {
     unleashUrl: configService.featureToggleUrl,
     unleashApiToken: configService.featureToggleApiToken,
     clientKeys: [configService.featureToggleClientKeys],
-    environment: configService.appEnv,
+    environment: configService.featureToggleEnv,
   })
 
   app.use(cors())

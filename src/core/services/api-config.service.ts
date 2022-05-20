@@ -17,6 +17,10 @@ export class ApiConfigService {
     return this.configService.get<string>('FEATURE_TOGGLE_API_TOKEN')
   }
 
+  get featureToggleEnv(): string {
+    return this.configService.get<string>('FEATURE_TOGGLE_ENV')
+  }
+
   get appEnv(): string {
     return this.configService.get<string>('APP_ENV')
   }

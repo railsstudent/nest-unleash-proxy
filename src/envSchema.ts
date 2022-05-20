@@ -7,4 +7,5 @@ export const validationSchema = Joi.object({
   FEATURE_TOGGLE_APP_NAME: Joi.string().required(),
   FEATURE_TOGGLE_API_TOKEN: Joi.string().required(),
   FEATURE_TOGGLE_CLIENT_KEYS: Joi.string().required(),
+  FEATURE_TOGGLE_ENV: Joi.string().default('development'),
 })
