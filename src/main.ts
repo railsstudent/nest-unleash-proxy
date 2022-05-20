@@ -14,21 +14,32 @@ async function bootstrap() {
   const configService = nestApp.get(ApiConfigService)
   const logger = new Logger('Main')
 
-  const app = unleashProxy.createApp({
-    unleashUrl: configService.featureToggleUrl,
-    unleashApiToken: configService.featureToggleApiToken,
-    clientKeys: [configService.featureToggleClientKeys],
-    environment: configService.featureToggleEnv,
-  })
+  const app = initProxy(configService)
+  applyMiddleware(app)
+  await startProxy(app, configService, logger)
+}
+bootstrap()
 
+async function startProxy(app: express.Application, configService: ApiConfigService, logger: Logger) {
+  await app.listen(configService.portNumber, () => {
+    logger.log(`Unleash Proxy listening on http://localhost:${configService.portNumber}/proxy`)
+  })
+}
+
+function applyMiddleware(app: express.Application) {
   app.use(cors())
   app.use(helmet())
   app.use(morgan('combined'))
   app.use(express.json({ limit: '10mb' }))
   app.use(express.urlencoded({ limit: '10mb', extended: true }))
   app.use(compression())
-  await app.listen(configService.portNumber, () => {
-    logger.log(`Unleash Proxy listening on http://localhost:${configService.portNumber}/proxy`)
+}
+
+function initProxy(configService: ApiConfigService) {
+  return unleashProxy.createApp({
+    unleashUrl: configService.featureToggleUrl,
+    unleashApiToken: configService.featureToggleApiToken,
+    clientKeys: [configService.featureToggleClientKeys],
+    environment: configService.featureToggleEnv,
   })
 }
-bootstrap()
